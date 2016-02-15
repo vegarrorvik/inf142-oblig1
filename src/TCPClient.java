@@ -16,6 +16,11 @@ public class TCPClient {
 
         BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
+        System.out.println("You can do following:\ninc *number* //increases Value with *number*\n" +
+                "dec *number* //decreases Value with *number*\n" +
+                "val //returns Value\n" +
+                "his //returns update history");
+
         sentence = inFromUser.readLine();
 
         outToServer.writeBytes(sentence + '\n');
