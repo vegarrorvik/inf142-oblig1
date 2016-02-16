@@ -1,4 +1,6 @@
 /**
+ * TCP server for å håndtere heiltalsvariabel V.
+ * Delar av koden er henta frå forelesningsnotat
  * Created by vegar on 2/15/16.
  */
 import java.io.*;
@@ -10,8 +12,8 @@ import java.util.Objects;
 public class TCPServer {
     public static void main(String[]args) throws IOException {
         ArrayList<UpdateInformation> history = new ArrayList<>();
-        String clientSentence;
-        String [] clientCommand;
+        String clientCommand;
+        String [] clientCommandToSplitToArray;
         int inputNumber = 0;
         int V = 0;
 
@@ -26,37 +28,40 @@ public class TCPServer {
 
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 
-            clientSentence = inFromClient.readLine();
-            System.out.println("Data received: " + clientSentence);
+            clientCommand = inFromClient.readLine();
+            System.out.println("Data received: " + clientCommand);
 
-            if(clientSentence.contains("inc") || clientSentence.contains("dec")){
-                clientCommand = clientSentence.split(" ");
-                if(clientCommand[0].equals("inc")) {
-                    inputNumber = Integer.parseInt(clientCommand[1]);
+            if(clientCommand.contains("inc") || clientCommand.contains("dec")){
+                clientCommandToSplitToArray = clientCommand.split(" ");
+                if(clientCommandToSplitToArray[0].equals("inc")) {
+                    inputNumber = Integer.parseInt(clientCommandToSplitToArray[1]);
                     V+= inputNumber;
                     history.add(new UpdateInformation("Increase: " + inputNumber, new Date(),connectionSocket.getRemoteSocketAddress()));
                     outToClient.writeBytes("Increase of value with " + inputNumber + " succeded. Value is now " + V + '\n');
                 }
-                else if(clientCommand[0].equals("dec")){
-                    inputNumber = Integer.parseInt(clientCommand[1]);
+                else if(clientCommandToSplitToArray[0].equals("dec")){
+                    inputNumber = Integer.parseInt(clientCommandToSplitToArray[1]);
                     V-=inputNumber;
                     history.add(new UpdateInformation("Decrease: " + inputNumber, new Date(),connectionSocket.getRemoteSocketAddress()));
                     outToClient.writeBytes("Decrease of value with " + inputNumber + " succeded. Value is now " + V + '\n');
                 }
 
-            } if(clientSentence.equals("val")) {
+            }
+            else if(clientCommand.equals("val")) {
                 outToClient.writeBytes("Value is " + V + '\n');
                 history.add(new UpdateInformation("Get value", new Date(),connectionSocket.getRemoteSocketAddress()));
             }
 
-            if (clientSentence.equals("his")){
+            else if (clientCommand.equals("his")){
                 String historyString = "";
                 for(UpdateInformation u: history){
-                    historyString += u;
+                    historyString += u + "NEXT";
                 }
+                history.add(new UpdateInformation("Get history", new Date(), connectionSocket.getRemoteSocketAddress()));
                 outToClient.writeBytes(historyString + '\n');
 
-            }
+            } else
+                outToClient.writeBytes("Input not valid, try again. Remember space between inc/dec and *number*. \n");
 
         }
     }
