@@ -6,7 +6,7 @@
 import java.io.*;
 import java.net.*;
 
-public class TCPClient {
+public class K {
     public static void main(String[]args) throws IOException {
         String userCommand;
         String responsFromServer;

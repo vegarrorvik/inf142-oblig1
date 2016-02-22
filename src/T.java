@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-public class TCPServer {
+public class T {
     public static void main(String[]args) throws IOException {
         ArrayList<UpdateInformation> history = new ArrayList<>();
         String clientCommand;
@@ -45,6 +45,8 @@ public class TCPServer {
                     history.add(new UpdateInformation("Decrease: " + inputNumber, new Date(),connectionSocket.getRemoteSocketAddress()));
                     outToClient.writeBytes("Decrease of value with " + inputNumber + " succeded. Value is now " + V + '\n');
                 }
+                else if(clientCommandToSplitToArray.length<2)
+                    outToClient.writeBytes("Invalid input. Remeber space between inc/dec and number \n");
 
             }
             else if(clientCommand.equals("val")) {
