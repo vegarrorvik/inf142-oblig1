@@ -3,6 +3,8 @@ import java.util.Date;
 
 /**
  * Created by vegar on 2/15/16.
+ * Hjelpeklasse til oblig 1, inf142, vro006.
+ * Det finst vell muligens ein slik klasse frå før, men denne fungerer flott og var fort gjort å lage.
  */
 public class UpdateInformation {
     private Date date;
